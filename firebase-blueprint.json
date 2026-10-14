@@ -1,0 +1,111 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile for teachers and students",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 128 },
+        "displayName": { "type": "string", "maxLength": 128 },
+        "role": { "type": "string", "enum": ["teacher", "student"] },
+        "studentId": { "type": "string", "maxLength": 30 },
+        "createdAt": { "type": "string", "maxLength": 50 },
+        "updatedAt": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["uid", "email", "role"]
+    },
+    "Course": {
+      "title": "Course",
+      "description": "Academic course managed by a teacher",
+      "type": "object",
+      "properties": {
+        "courseCode": { "type": "string", "maxLength": 30 },
+        "courseName": { "type": "string", "maxLength": 150 },
+        "section": { "type": "string", "maxLength": 30 },
+        "semester": { "type": "string", "maxLength": 20 },
+        "academicYear": { "type": "string", "maxLength": 20 },
+        "teacherId": { "type": "string", "maxLength": 128 },
+        "teacherEmail": { "type": "string", "maxLength": 128 },
+        "plannedSessions": { "type": "number" },
+        "maxPoints": { "type": "number" },
+        "studentCount": { "type": "number" },
+        "createdAt": { "type": "string", "maxLength": 50 },
+        "updatedAt": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["courseCode", "courseName", "section", "teacherId", "teacherEmail", "plannedSessions", "maxPoints"]
+    },
+    "CourseStudent": {
+      "title": "CourseStudent",
+      "description": "Enrolled student in a course",
+      "type": "object",
+      "properties": {
+        "studentNo": { "type": "number" },
+        "studentId": { "type": "string", "maxLength": 30 },
+        "name": { "type": "string", "maxLength": 120 },
+        "email": { "type": "string", "maxLength": 128 },
+        "enrolledAt": { "type": "string", "maxLength": 50 }
+      },
+      "required": ["studentId", "name", "email"]
+    },
+    "ClassSession": {
+      "title": "ClassSession",
+      "description": "Individual attendance check-in session",
+      "type": "object",
+      "properties": {
+        "sessionNumber": { "type": "number" },
+        "title": { "type": "string", "maxLength": 120 },
+        "date": { "type": "string", "maxLength": 30 },
+        "startTime": { "type": "string", "maxLength": 50 },
+        "endTime": { "type": "string", "maxLength": 50 },
+        "isActive": { "type": "boolean" },
+        "currentQrToken": { "type": "string", "maxLength": 256 },
+        "tokenExpiresAt": { "type": "number" },
+        "totalPresent": { "type": "number" },
+        "teacherId": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["sessionNumber", "title", "date", "isActive", "teacherId"]
+    },
+    "AttendanceRecord": {
+      "title": "AttendanceRecord",
+      "description": "Attendance log for a student in a session",
+      "type": "object",
+      "properties": {
+        "courseId": { "type": "string", "maxLength": 128 },
+        "sessionId": { "type": "string", "maxLength": 128 },
+        "sessionNumber": { "type": "number" },
+        "studentId": { "type": "string", "maxLength": 30 },
+        "studentName": { "type": "string", "maxLength": 120 },
+        "studentEmail": { "type": "string", "maxLength": 128 },
+        "studentUid": { "type": "string", "maxLength": 128 },
+        "status": { "type": "string", "enum": ["present", "late", "excused", "absent"] },
+        "method": { "type": "string", "enum": ["qr_scan", "manual_override"] },
+        "timestamp": { "type": "string", "maxLength": 50 },
+        "note": { "type": "string", "maxLength": 250 }
+      },
+      "required": ["courseId", "sessionId", "sessionNumber", "studentId", "studentEmail", "status", "method", "timestamp"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "User profile documents"
+    },
+    "/courses/{courseId}": {
+      "schema": { "$ref": "#/entities/Course" },
+      "description": "Academic courses"
+    },
+    "/courses/{courseId}/students/{studentDocId}": {
+      "schema": { "$ref": "#/entities/CourseStudent" },
+      "description": "Enrolled student rosters"
+    },
+    "/courses/{courseId}/sessions/{sessionId}": {
+      "schema": { "$ref": "#/entities/ClassSession" },
+      "description": "Attendance sessions with dynamic QR tokens"
+    },
+    "/courses/{courseId}/attendance/{attendanceId}": {
+      "schema": { "$ref": "#/entities/AttendanceRecord" },
+      "description": "Student attendance records"
+    }
+  }
+}

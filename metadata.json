@@ -1,0 +1,6 @@
+{
+  "name": "BU Attendance Management System",
+  "description": "ระบบบริหารจัดการการเข้าเรียนด้วย Dynamic QR Code พร้อมคำนวณคะแนน Proportional Scoring สำหรับอาจารย์และนักศึกษา มหาวิทยาลัยกรุงเทพ",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
